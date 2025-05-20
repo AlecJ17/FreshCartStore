@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
@@ -6,6 +6,23 @@ import toast from "react-hot-toast";
 
 const NavBar = () => {
   const [open, setOpen] = React.useState(false);
+  const menuRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
   const {
     user,
     setUser,
@@ -130,6 +147,7 @@ const NavBar = () => {
       {/* Mobile Menu */}
       {open && (
         <div
+          ref={menuRef}
           className={`${
             open ? "flex" : "hidden"
           } absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}
