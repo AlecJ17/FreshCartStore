@@ -20,7 +20,7 @@ await connectCloudinary();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://green-cart-store.vercel.app/",
+  "https://green-cart-store.vercel.app",
 ];
 
 app.use(
