@@ -18,18 +18,23 @@ const port = process.env.PORT || 4000;
 await connectDB();
 await connectCloudinary();
 
-// Allow multiple origins
 const allowedOrigins = [
   "http://localhost:5173",
   "https://green-cart-store.vercel.app",
 ];
 
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
 app.post("/stripe", express.raw({ type: "application/json" }), stripeWebhooks);
 
-// Middleware Configuration
+// ✅ Then apply body parser and cookie parser
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.get("/", (req, res) => res.send("API is Working"));
 app.use("/api/user", userRouter);
