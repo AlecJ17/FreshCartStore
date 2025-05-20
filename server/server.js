@@ -17,15 +17,17 @@ const port = process.env.PORT || 4000;
 
 await connectDB();
 await connectCloudinary();
-
+/*
+// Development only
 const allowedOrigins = [
   "http://localhost:5173",
   "https://green-cart-store.vercel.app",
 ];
+*/
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: "https://green-cart-store.vercel.app",
     credentials: true,
   })
 );
