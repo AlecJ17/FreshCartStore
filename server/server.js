@@ -32,7 +32,6 @@ app.use(
 
 app.post("/stripe", express.raw({ type: "application/json" }), stripeWebhooks);
 
-// ✅ Then apply body parser and cookie parser
 app.use(express.json());
 app.use(cookieParser());
 
