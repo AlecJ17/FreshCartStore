@@ -1,26 +1,28 @@
 import jwt from "jsonwebtoken";
 
-const authSeller = async (req, res, next) => {
-  const { sellerToken } = req.cookies;
-  if (!sellerToken) {
-    return res.json({
-      success: false,
-      message: "Not Authorized",
-    });
+const authUser = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Not Authorized" });
   }
+
+  const token = authHeader.split(" ")[1];
+
   try {
-    const tokenDecode = jwt.verify(sellerToken, process.env.JWT_SECRET);
-    if (tokenDecode.email === process.env.SELLER_EMAIL) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Check if the email matches the allowed user
+    if (decoded.email === process.env.ALLOWED_USER_EMAIL) {
+      req.userId = decoded.id;
       next();
     } else {
-      return res.json({
-        success: false,
-        message: " Not Authorized",
-      });
+      return res
+        .status(401)
+        .json({ success: false, message: "Not Authorized" });
     }
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    return res.status(401).json({ success: false, message: "Invalid Token" });
   }
 };
 
-export default authSeller;
+export default authUser;

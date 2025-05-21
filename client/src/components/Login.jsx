@@ -18,8 +18,9 @@ const Login = () => {
         password,
       });
       if (data.success) {
-        navigate("/");
+        localStorage.setItem("token", data.token); // ✅ store token
         setUser(data.user);
+        navigate("/");
         setShowUserLogin(false);
       } else {
         toast.error(data.message);
